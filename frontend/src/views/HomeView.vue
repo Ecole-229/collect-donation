@@ -52,10 +52,20 @@ const calculerPourcentage = (recolte, objectif) => {
   const pct = Math.round((recolte / objectif) * 100)
   return pct > 100 ? 100 : pct
 }
+
+const deconnexion = () => {
+  alert('Vous avez été déconnecté avec succès !')
+  router.push('/login')
+}
+
+
 </script>
 
 <template>
   <div class="catalog-container">
+    <button @click="deconnexion" class="btn-logout">
+      Se déconnecter
+    </button>
     <!-- Header -->
     <header class="catalog-header">
       <h1 class="main-title">Découvrez les Projets</h1>
@@ -277,6 +287,23 @@ const calculerPourcentage = (recolte, objectif) => {
   cursor: pointer;
   transition: background 0.2s ease;
 }
+
+.btn-logout {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-logout:hover {
+  background-color: #c0392b;
+}
+
 
 .btn-donate:hover {
   background: var(--primary);
