@@ -1,10 +1,11 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import imgInondation from '../assets/inondation.jpg'
 import imgForet from '../assets/foret.jpg'
 import imgEducation from '../assets/education.jpg'
 
-
+const router = useRouter()
 // Liste fictive de projets pour simuler la base de données (John James)
 const projets = ref([
   {
@@ -101,7 +102,9 @@ const calculerPourcentage = (recolte, objectif) => {
           </div>
 
           <!-- Bouton d'action -->
-          <button class="btn-donate">Soutenir ce projet</button>
+          <button @click="router.push(`/project/${projet.id}`)" class="btn-donate">
+            Soutenir ce projet
+          </button>
         </div>
       </div>
     </main>
