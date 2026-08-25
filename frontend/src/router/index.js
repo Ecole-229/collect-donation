@@ -6,6 +6,7 @@ import ProjectDetailView from '../views/ProjectDetailView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import AdminUsersView from '../views/AdminUsersView.vue'
 import AdminProjectsView from '../views/AdminProjectsView.vue'
+import AdminCategoriesView from '../views/AdminCategoriesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/admin/projects',
       name: 'admin-projects',
       component: AdminProjectsView,
+    },
+    {
+      path: '/admin/categories',
+      name: 'admin-categories',
+      component: AdminCategoriesView,
     },
   ],
 })

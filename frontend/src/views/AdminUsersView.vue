@@ -17,6 +17,7 @@ const toggleStatut = (utilisateur) => {
   const message = utilisateur.actif ? 'activé' : 'désactivé'
   console.log(`Utilisateur ${utilisateur.nom} est maintenant ${message}.`)
 }
+
 </script>
 
 <template>
