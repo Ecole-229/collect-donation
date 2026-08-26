@@ -1,21 +1,40 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { authService } from '../services/authServices.js' // Assure-toi du bon chemin
+
+const router = useRouter()
 
 const email = ref('')
 const password = ref('')
 const isLoading = ref(false)
+const errorMessage = ref('') // Pour afficher les erreurs (ex: "Identifiants incorrects")
 
-const handleLogin = () => {
+const handleLogin = async () => {
+  // Réinitialisation de l'erreur à chaque tentative
+  errorMessage.value = ''
   isLoading.value = true
 
-  // Simulation de la latence réseau avant intégration de l'API d'Eddy
-  setTimeout(() => {
-    console.log('Credentials soumis :', { email: email.value, password: password.value })
+  try {
+    // Appel réel au backend via notre service
+    const response = await authService.login(email.value, password.value)
+    
+    // Le token et l'utilisateur sont déjà sauvegardés dans le localStorage par le service
+    
+    // Redirection dynamique selon le rôle de l'utilisateur
+    if (response.user.role === 'ADMIN') {
+      router.push('/admin/Users')
+    } else {
+      router.push('/')
+    }
+  } catch (error) {
+    errorMessage.value = error.message
+  } finally {
     isLoading.value = false
-    alert('Formulaire soumis avec succès !')
-  }, 1000)
+  }
 }
 </script>
+
 
 <template>
   <div class="auth-wrapper">
@@ -23,6 +42,11 @@ const handleLogin = () => {
       <div class="auth-header">
         <h1 class="auth-title">Connexion</h1>
         <p class="auth-subtitle">Accédez à votre espace Collect Donation</p>
+      </div>
+
+      <!-- 👇 NOUVEAU : Affichage des erreurs -->
+      <div v-if="errorMessage" class="error-alert">
+        {{ errorMessage }}
       </div>
 
       <form @submit.prevent="handleLogin" class="auth-form">
@@ -178,6 +202,17 @@ const handleLogin = () => {
   border-radius: 50%;
   display: inline-block;
   animation: rotation 1s linear infinite;
+}
+
+.error-alert {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #f87171;
 }
 
 @keyframes rotation {
