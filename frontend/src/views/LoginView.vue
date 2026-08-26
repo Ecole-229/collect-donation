@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const email = ref('')
 const password = ref('')
 const isLoading = ref(false)
@@ -29,22 +31,47 @@ const handleLogin = () => {
         <div class="form-group">
           <label for="email" class="form-label">Adresse Email</label>
           <div class="input-wrapper">
-            <input type="email" id="email" v-model="email" class="form-input" placeholder="adresse@exemple.com" required
-              autocomplete="email" />
+            <input
+              type="email"
+              id="email"
+              v-model="email"
+              class="form-input"
+              placeholder="adresse@exemple.com"
+              required
+              autocomplete="email"
+            />
           </div>
         </div>
 
         <div class="form-group">
           <label for="password" class="form-label">Mot de passe</label>
           <div class="input-wrapper">
-            <input type="password" id="password" v-model="password" class="form-input" placeholder="••••••••" required
-              autocomplete="current-password" />
+            <input
+              type="password"
+              id="password"
+              v-model="password"
+              class="form-input"
+              placeholder="••••••••"
+              required
+              autocomplete="current-password"
+            />
           </div>
         </div>
 
+        <!-- Bouton principal de soumission normal -->
         <button type="submit" class="btn-submit" :disabled="isLoading">
           <span v-if="!isLoading">Se connecter</span>
           <span v-else class="loader"></span>
+        </button>
+
+        <!-- Lien de redirection vers l'inscription placé en dehors du bouton principal -->
+        <p class="auth-redirect">
+          Nouveau ? <span @click="router.push('/register')">Créer un compte</span>
+        </p>
+
+        <!-- Bouton de simulation Admin placé en dehors du bouton principal -->
+        <button @click="router.push('/admin/users')" type="button" class="btn-simul-admin">
+          Accéder en tant qu'Admin (Test)
         </button>
       </form>
     </div>
@@ -68,7 +95,7 @@ const handleLogin = () => {
   align-items: center;
   min-height: 80vh;
   padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .auth-card {
@@ -77,7 +104,32 @@ const handleLogin = () => {
   background: #ffffff;
   padding: 40px;
   border-radius: var(--radius);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 5px 10px rgba(0, 0, 0, 0.03);
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.05),
+    0 5px 10px rgba(0, 0, 0, 0.03);
+}
+
+.auth-redirect {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 15px;
+  color: #7f8c8d;
+}
+.auth-redirect span {
+  color: #42b883;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-simul-admin {
+  width: 100%;
+  padding: 10px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: 600;
 }
 
 .auth-header {

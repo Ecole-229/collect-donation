@@ -48,9 +48,17 @@ const supprimerProjet = (id) => {
   <div class="admin-container">
     <!-- Barre supérieure de navigation Admin -->
     <div class="admin-nav-top">
-      <button @click="router.push('/admin/users')" class="btn-nav-link">
-        ← Retour à la Gestion Utilisateurs
-      </button>
+      <div class="admin-nav-top" style="display: flex; gap: 15px; margin-bottom: 20px;">
+        <button @click="router.push('/admin/users')"
+          style="padding: 8px 16px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-weight: 600;">➔
+          Gérer les Utilisateurs</button>
+        <button @click="router.push('/admin/categories')"
+          style="padding: 8px 16px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-weight: 600;">➔
+          Gérer les Catégories</button>
+        <button @click="router.push('/')"
+          style="margin-left: auto; padding: 8px 16px; background: #2c3e50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">←
+          Retour Accueil</button>
+      </div>
     </div>
 
     <header class="admin-header">
@@ -138,6 +146,54 @@ const supprimerProjet = (id) => {
   margin-bottom: 20px;
 }
 
+/* Style de la barre de navigation supérieure (John James) */
+.admin-nav-top {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+/* Boutons de navigation épurés au repos */
+.admin-nav-top button:not(.back-home) {
+  background-color: #ffffff;
+  color: #2c3e50;
+  border: 1px solid #e2e8f0;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Effet de survol corrigé : fond vert et texte blanc obligatoire */
+.admin-nav-top button:not(.back-home):hover {
+  background-color: #42b883 !important;
+  color: #ffffff !important;
+  border-color: #42b883 !important;
+  box-shadow: 0 4px 6px rgba(66, 184, 131, 0.15);
+}
+
+/* Bouton Retour Accueil principal sombre */
+.back-home {
+  margin-left: auto;
+  background-color: #2c3e50;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.back-home:hover {
+  background-color: #34495e;
+}
+
+
 .btn-nav-link {
   background: none;
   border: none;
@@ -201,7 +257,8 @@ const supprimerProjet = (id) => {
   color: var(--text-main);
 }
 
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
   padding: 10px;
   border: 1px solid var(--border-color);
   border-radius: 6px;

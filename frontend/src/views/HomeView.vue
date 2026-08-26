@@ -11,41 +11,53 @@ const projets = ref([
   {
     id: 1,
     titre: 'Urgences Inondations Afrique',
-    description: 'Aide humanitaire d\'urgence pour approvisionner en eau potable et nourriture les familles touchées.',
+    description:
+      "Aide humanitaire d'urgence pour approvisionner en eau potable et nourriture les familles touchées.",
     categorie: 'Humanitaire',
     image: imgInondation,
     objectif: 15000,
-    recolte: 9450
+    recolte: 9450,
   },
   {
     id: 2,
     titre: 'Reforestation de la Forêt Classée',
-    description: 'Projet écologique visant à planter 5000 arbres pour lutter contre la désertification locale.',
+    description:
+      'Projet écologique visant à planter 5000 arbres pour lutter contre la désertification locale.',
     categorie: 'Environnement',
     image: imgForet,
     objectif: 5000,
-    recolte: 1200
+    recolte: 1200,
   },
   {
     id: 3,
     titre: 'Une Tablette Pour Apprendre',
-    description: 'Équiper les classes des zones rurales en outils numériques pour l\'éducation des enfants.',
+    description:
+      "Équiper les classes des zones rurales en outils numériques pour l'éducation des enfants.",
     categorie: 'Éducation',
     image: imgEducation,
     objectif: 8000,
-    recolte: 8000
-  }
+    recolte: 8000,
+  },
 ])
-
 
 // Gestion des filtres de catégories
 const categories = ['Tous', 'Humanitaire', 'Environnement', 'Éducation']
 const categorieSelectionnee = ref('Tous')
 
+// Variable pour la recherche par texte (John James)
+const texteRecherche = ref('')
+
+// Filtre combiné : Catégorie + Recherche textuelle
 const projetsFiltres = computed(() => {
-  if (categorieSelectionnee.value === 'Tous') return projets.value
-  return projets.value.filter(p => p.categorie === categorieSelectionnee.value)
+  return projets.value.filter(projet => {
+    const correspondCategorie = categorieSelectionnee.value === 'Tous' || projet.categorie === categorieSelectionnee.value
+    const correspondTexte = projet.titre.toLowerCase().includes(texteRecherche.value.toLowerCase()) ||
+      projet.description.toLowerCase().includes(texteRecherche.value.toLowerCase())
+
+    return correspondCategorie && correspondTexte
+  })
 })
+
 
 // Calcul du pourcentage de la barre de progression
 const calculerPourcentage = (recolte, objectif) => {
@@ -58,14 +70,13 @@ const deconnexion = () => {
   router.push('/login')
 }
 
-
 </script>
 
 <template>
   <div class="catalog-container">
-    <button @click="deconnexion" class="btn-logout">
-      Se déconnecter
-    </button>
+    <button @click="deconnexion" class="btn-logout">Se déconnecter</button>
+    <button @click="router.push('/profile')" class="btn-profile">Mon Profil</button>
+    <button @click="router.push('/login')" class="btn-login-nav">Connexion Admin</button>
     <!-- Header -->
     <header class="catalog-header">
       <h1 class="main-title">Découvrez les Projets</h1>
@@ -74,15 +85,16 @@ const deconnexion = () => {
 
     <!-- Navigation / Filtres par catégories -->
     <div class="categories-nav">
-      <button
-        v-for="cat in categories"
-        :key="cat"
-        class="btn-category"
-        :class="{ active: categorieSelectionnee === cat }"
-        @click="categorieSelectionnee = cat"
-      >
+      <button v-for="cat in categories" :key="cat" class="btn-category"
+        :class="{ active: categorieSelectionnee === cat }" @click="categorieSelectionnee = cat">
         {{ cat }}
       </button>
+    </div>
+
+    <!-- Barre de recherche (John James) -->
+    <div class="search-container">
+      <input v-model="texteRecherche" type="text" placeholder="🔍 Rechercher un projet par titre ou description..."
+        class="search-input" />
     </div>
 
     <!-- Grille des projets -->
@@ -100,10 +112,8 @@ const deconnexion = () => {
           <!-- Barre de progression -->
           <div class="progress-section">
             <div class="progress-bar-bg">
-              <div
-                class="progress-bar-fill"
-                :style="{ width: calculerPourcentage(projet.recolte, projet.objectif) + '%' }"
-              ></div>
+              <div class="progress-bar-fill"
+                :style="{ width: calculerPourcentage(projet.recolte, projet.objectif) + '%' }"></div>
             </div>
             <div class="progress-text">
               <span class="pct-number">{{ calculerPourcentage(projet.recolte, projet.objectif) }}%</span>
@@ -129,13 +139,16 @@ const deconnexion = () => {
   --muted: #7f8c8d;
   --light-bg: #f8f9fa;
   --border: #e2e8f0;
-  --shadow: 0 10px 20px rgba(0,0,0,0.04);
+  --shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
   --radius: 12px;
 
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 .catalog-header {
@@ -147,6 +160,31 @@ const deconnexion = () => {
   font-size: 36px;
   color: var(--dark);
   margin-bottom: 10px;
+}
+
+.btn-profile {
+  position: absolute;
+  top: 20px;
+  right: 160px;
+  padding: 8px 16px;
+  background: #34495e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-login-nav {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 16px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
 .subtitle {
@@ -172,7 +210,8 @@ const deconnexion = () => {
   transition: all 0.2s ease;
 }
 
-.btn-category.active, .btn-category:hover {
+.btn-category.active,
+.btn-category:hover {
   background: var(--primary);
   border-color: var(--primary);
   color: white;
@@ -300,12 +339,38 @@ const deconnexion = () => {
   font-weight: 600;
   cursor: pointer;
 }
+
 .btn-logout:hover {
   background-color: #c0392b;
 }
 
-
 .btn-donate:hover {
   background: var(--primary);
 }
+
+.search-container {
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 15px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  background-color: white;
+  color: var(--dark);
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(66, 184, 131, 0.15);
+}
+
+
 </style>

@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // Liste initiale des catégories (John James)
 const categories = ref([
@@ -37,6 +40,13 @@ const supprimerCategorie = (id) => {
 
 <template>
   <div class="admin-container">
+    <!-- Boutons pour naviguer (John James) -->
+    <div class="admin-nav-top">
+      <button @click="router.push('/admin/users')" class="btn-nav-link">➔ Gérer les Utilisateurs</button>
+      <button @click="router.push('/admin/projects')" class="btn-nav-link">➔ Gérer les Projets</button>
+      <button @click="router.push('/')" class="btn-nav-link back-home">← Retour Accueil</button>
+    </div>
+
     <header class="admin-header">
       <h1 class="admin-title">Gestion des Catégories</h1>
       <p class="admin-subtitle">Interface Administrateur — Configuration des filtres de la plateforme</p>
@@ -101,6 +111,33 @@ const supprimerCategorie = (id) => {
   margin: 40px auto;
   padding: 0 20px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.admin-nav-top {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.btn-nav-link {
+  background: #f1f5f9;
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: var(--text-main);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-nav-link:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.back-home {
+  margin-left: auto;
+  background: #2c3e50;
+  color: white;
 }
 
 .admin-header {
