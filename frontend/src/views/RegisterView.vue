@@ -1,30 +1,42 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { authService } from '../services/authServices.js' // Ajuste le chemin selon ton architecture
+
+const router = useRouter()
 
 const name = ref('')
 const email = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
 const isLoading = ref(false)
+const errorMessage = ref('') // Pour afficher les erreurs venant du backend (ex: email déjà pris)
 
-const handleRegister = () => {
+const handleRegister = async () => {
+  // Réinitialiser l'erreur à chaque tentative
+  errorMessage.value = ''
+
   if (password.value !== passwordConfirmation.value) {
-    alert('Les mots de passe ne correspondent pas !')
+    errorMessage.value = 'Les mots de passe ne correspondent pas !'
     return
   }
 
   isLoading.value = true
 
-  // Simulation de l'inscription avant de l'associer à l'API d'Eddy
-  setTimeout(() => {
-    console.log('Inscription soumise :', {
-      name: name.value,
-      email: email.value,
-      password: password.value
-    })
+  try {
+    // On passe les données en respectant ce que le backend Express attend (nom, email, mot_de_passe)
+    await authService.register(name.value, email.value, password.value)
+    
+    alert('Inscription réussie ! Vous allez être redirigé vers la connexion.')
+    
+    // Redirection vers la page de login
+    router.push('/login') 
+  } catch (error) {
+    // Récupération de l'erreur (ex: "Cet email est déjà utilisé.")
+    errorMessage.value = error.message
+  } finally {
     isLoading.value = false
-    alert('Inscription réussie !')
-  }, 1000)
+  }
 }
 </script>
 
@@ -34,6 +46,11 @@ const handleRegister = () => {
       <div class="auth-header">
         <h1 class="auth-title">Créer un compte</h1>
         <p class="auth-subtitle">Rejoignez la plateforme Collect Donation dès aujourd'hui</p>
+      </div>
+
+      <!-- 👇 NOUVEAU : Affichage des erreurs -->
+      <div v-if="errorMessage" class="error-alert">
+        {{ errorMessage }}
       </div>
 
       <form @submit.prevent="handleRegister" class="auth-form">
