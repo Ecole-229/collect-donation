@@ -1,46 +1,74 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { projectService } from '../services/projectServices' // L'import magique
 
 const router = useRouter()
 
-// Liste stricte des statuts demandés dans le tableau
 const statutsDisponibles = ['BROUILLON', 'EN_COURS', 'FINANCE', 'TERMINE', 'ANNULE']
 
-// Données fictives des projets (John James)
-const projets = ref([
-  { id: 1, titre: 'Urgences Inondations Afrique', categorie: 'Humanitaire', objectif: 15000, statut: 'EN_COURS' },
-  { id: 2, titre: 'Reforestation de la Forêt Classée', categorie: 'Environnement', objectif: 5000, statut: 'BROUILLON' },
-  { id: 3, titre: 'Une Tablette Pour Apprendre', categorie: 'Éducation', objectif: 8000, statut: 'FINANCE' }
-])
+// Variables d'état (vides au départ, remplies par le backend)
+const projets = ref([])
+const isLoading = ref(true)
+const errorMessage = ref('')
 
-// Formulaire de création (CRUD)
+// Champs du formulaire
 const nouveauTitre = ref('')
 const nouvelleCategorie = ref('Humanitaire')
 const nouvelObjectif = ref('')
 
-const ajouterProjet = () => {
-  if (!nouveauTitre.value || !nouvelObjectif.value) return
-
-  projets.value.push({
-    id: projets.value.length + 1,
-    titre: nouveauTitre.value,
-    categorie: nouvelleCategorie.value,
-    objectif: Number(nouvelObjectif.value),
-    statut: 'BROUILLON' // Statut initial par défaut
-  })
-
-  // Réinitialisation du formulaire
-  nouveauTitre.value = ''
-  nouvelObjectif.value = ''
-  alert('Projet créé avec succès en mode BROUILLON !')
+// 1. Fonction pour récupérer les projets depuis l'API
+const chargerProjets = async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+  try {
+    projets.value = await projectService.getAllProjects()
+  } catch (error) {
+    errorMessage.value = error.message
+  } finally {
+    isLoading.value = false
+  }
 }
 
-// Fonction de suppression (CRUD)
-const supprimerProjet = (id) => {
-  if (confirm('Voulez-vous vraiment supprimer ce projet ?')) {
-    projets.value = projets.value.filter(p => p.id !== id)
+// S'exécute automatiquement quand l'administrateur arrive sur la page
+onMounted(() => {
+  chargerProjets()
+})
+
+// 2. Fonction pour créer le projet (Connectée au backend)
+const ajouterProjet = async () => {
+  if (!nouveauTitre.value || !nouvelObjectif.value) return
+
+  try {
+    // On traduit les variables pour correspondre à notre modèle Mongoose
+    await projectService.createProject({
+      title: nouveauTitre.value,
+      // Comme on n'a pas de champ catégorie en base, on l'utilise comme description pour l'instant
+      description: `Catégorie : ${nouvelleCategorie.value}`, 
+      goalAmount: Number(nouvelObjectif.value)
+    })
+
+    // Réinitialisation du formulaire
+    nouveauTitre.value = ''
+    nouvelObjectif.value = ''
+    alert('Projet créé avec succès dans la base de données !')
+
+    // On rafraîchit la liste pour voir apparaître le nouveau projet
+    await chargerProjets()
+    
+  } catch (error) {
+    alert("Erreur lors de la création : " + error.message)
   }
+}
+
+// 3. Fonction de suppression (En attente du backend)
+const supprimerProjet = () => {
+  alert("La route de suppression n'existe pas encore côté backend ! Nous devons la créer.");
+}
+
+// 4. Fonction de mise à jour du statut (En attente du backend)
+const modifierStatut = () => {
+    alert("La modification de statut nécessite aussi une nouvelle route backend.");
 }
 </script>
 
@@ -95,20 +123,26 @@ const supprimerProjet = (id) => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="projet in projets" :key="projet.id">
-            <td class="font-bold">{{ projet.titre }}</td>
-            <td>{{ projet.categorie }}</td>
-            <td>{{ projet.objectif }} €</td>
+          <!-- Ajout d'un état de chargement -->
+          <tr v-if="isLoading">
+            <td colspan="5" style="text-align: center;">Chargement des projets depuis la base de données...</td>
+          </tr>
+          
+          <!-- Affichage des vraies données (utilisation de title, description, goalAmount et status) -->
+          <tr v-else v-for="projet in projets" :key="projet._id">
+            <td class="font-bold">{{ projet.title }}</td>
+            <td>{{ projet.description }}</td>
+            <td>{{ projet.goalAmount }} €</td>
             <td>
-              <!-- Sélecteur de modification des statuts -->
-              <select v-model="projet.statut" class="select-status">
+              <!-- Ajout de l'événement @change pour détecter la modification -->
+              <select v-model="projet.status" @change="modifierStatut(projet._id, projet.status)" class="select-status">
                 <option v-for="st in statutsDisponibles" :key="st" :value="st">
                   {{ st }}
                 </option>
               </select>
             </td>
             <td>
-              <button @click="supprimerProjet(projet.id)" class="btn-delete">
+              <button @click="supprimerProjet(projet._id)" class="btn-delete">
                 Supprimer
               </button>
             </td>
