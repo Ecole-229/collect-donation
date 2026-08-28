@@ -1,0 +1,43 @@
+/**
+ * Tokens de design – module Panier / LignePanier (Félix)
+ * ---------------------------------------------------------------
+ * Direction : "reçu de don" — le panier se lit comme un ticket de
+ * caisse solidaire : lignes en pointillés, montants alignés en
+ * chiffres tabulaires, empreinte du montant total forte (Fraunces),
+ * reste de l'UI discret (Inter).
+ */
+:root {
+  /* Couleurs */
+  --panier-primary: #0b5d57;       /* sapin profond – confiance, croissance */
+  --panier-primary-dark: #073d38;
+  --panier-accent: #e8a33d;        /* marigold – appel à l'action, progression */
+  --panier-accent-dark: #c4832a;
+  --panier-bg: #f7f3ec;            /* sable doux */
+  --panier-surface: #ffffff;
+  --panier-text: #1f2a28;          /* charcoal chaud */
+  --panier-text-muted: #5c6b67;
+  --panier-border: #e1dbcd;
+  --panier-success: #2f8f5b;
+  --panier-error: #c4453a;
+  --panier-error-bg: #fbe9e7;
+
+  /* Typographie */
+  --panier-font-display: "Fraunces", "Georgia", serif;
+  --panier-font-body: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Rythme */
+  --panier-radius-s: 6px;
+  --panier-radius-m: 10px;
+  --panier-space-1: 4px;
+  --panier-space-2: 8px;
+  --panier-space-3: 16px;
+  --panier-space-4: 24px;
+  --panier-space-5: 32px;
+
+  --panier-shadow-card: 0 1px 2px rgba(31, 42, 40, 0.06), 0 4px 12px rgba(31, 42, 40, 0.06);
+}
+
+.panier-num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
