@@ -6,8 +6,6 @@ exports.register = async (req, res) => {
     try {
       const { name, email, password } = req.body;
 
-      console.log("verify 1");
-
       const exsitingUser = await User.findOne({ email });
 
       if(exsitingUser) {
