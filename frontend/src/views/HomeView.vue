@@ -66,9 +66,13 @@ const calculerPourcentage = (recolte, objectif) => {
 }
 
 const deconnexion = () => {
-  alert('Vous avez été déconnecté avec succès !')
+  // Suppression du token JWT pour déconnecter proprement l'utilisateur (John James)
+  localStorage.removeItem('user_token')
+
+  alert('Vous avez été déconnecté. Le token a été supprimé.')
   router.push('/login')
 }
+
 
 </script>
 

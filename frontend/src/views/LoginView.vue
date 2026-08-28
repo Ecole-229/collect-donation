@@ -10,13 +10,21 @@ const isLoading = ref(false)
 const handleLogin = () => {
   isLoading.value = true
 
-  // Simulation de la latence réseau avant intégration de l'API d'Eddy
   setTimeout(() => {
-    console.log('Credentials soumis :', { email: email.value, password: password.value })
+    // Simulation du Token JWT envoyé par Eddy (John James)
+    const fauxTokenJWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.sampleToken"
+
+    // Sauvegarde stricte dans le stockage local du navigateur
+    localStorage.setItem('user_token', fauxTokenJWT)
+
+    console.log('Token JWT sauvegardé avec succès dans le localStorage')
     isLoading.value = false
-    alert('Formulaire soumis avec succès !')
+
+    alert('Connexion réussie ! Token enregistré.')
+    router.push('/') // Redirection vers l'accueil après connexion
   }, 1000)
 }
+
 </script>
 
 <template>
