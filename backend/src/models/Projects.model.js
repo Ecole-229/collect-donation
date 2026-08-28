@@ -41,4 +41,12 @@ projectSchema.virtual('progress').get(function() {
     return ((this.collectedAmount / this.goalAmount) * 100).toFixed(2);
 });
 
+projectSchema.pre('save', function(){
+    if (this.collectedAmount < this.goalAmount) {
+        this.status = 'EN_COURS';
+    } else if(this.collectedAmount >= this.goalAmount) {
+        this.status = 'FINANCE';
+    }
+});
+
 module.exports = mongoose.model('Project', projectSchema);
