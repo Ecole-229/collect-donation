@@ -33,7 +33,7 @@ exports.verifyToken = (req, res, next) => {
 // 2. Middleware pour vérifier l'autorisation (Rôle ADMIN)
 // Note : Ce middleware doit TOUJOURS être appelé APRÈS verifyToken
 exports.isAdmin = (req, res, next) => {
-    if (!req.user || req.user.role !== 'ADMIN') {
+    if (!req.user || req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Accès interdit. Droits administrateur requis.' });
     }
     
