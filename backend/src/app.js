@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const user = require("./routes/user.routes");
-const project = require("./routes/project.routes");
-const donation = require("./routes/don.routes");
+const user = require("./routes/user.routes.js");
+const project = require("./routes/project.routes.js");
+const donation = require("./routes/don.routes.js");
 
 const app = express();
 
