@@ -22,14 +22,19 @@ const chargerProjets = async () => {
   isLoading.value = true
   errorMessage.value = ''
   try {
-    projets.value = await projectService.getAllProjects()
+    const data = await projectService.getAllProjects()
+
+    // 👇 C'est ici qu'il faut assigner directement à .value
+    projets.value = data.projects;
+
+    console.log("Projets chargés avec succès :", projets.value);
+    
   } catch (error) {
     errorMessage.value = error.message
   } finally {
     isLoading.value = false
   }
 }
-
 // S'exécute automatiquement quand l'administrateur arrive sur la page
 onMounted(() => {
   chargerProjets()

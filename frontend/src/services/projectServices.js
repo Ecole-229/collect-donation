@@ -1,5 +1,5 @@
 // src/services/projectService.js
-const API_URL = 'http://127.0.0.1:3000/api/projects';
+const API_URL = 'http://127.0.0.1:3000/api/project';
 
 // Fonction utilitaire pour générer l'en-tête avec le token
 const getAuthHeaders = () => {

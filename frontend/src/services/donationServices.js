@@ -1,5 +1,5 @@
 // src/services/donationService.js
-const API_URL = 'http://127.0.0.1:3000/api/donations';
+const API_URL = 'http://127.0.0.1:3000/api/donation';
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
