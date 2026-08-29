@@ -7,6 +7,9 @@ import ProfileView from '../views/ProfileView.vue'
 import AdminUsersView from '../views/AdminUsersView.vue'
 import AdminProjectsView from '../views/AdminProjectsView.vue'
 
+// N'oublie pas d'importer le fichier de ta vue publique des projets !
+// import ProjectsView from '../views/ProjectsView.vue' 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,6 +28,12 @@ const router = createRouter({
       name: 'register',
       component: RegisterView,
     },
+    // 👇 NOUVELLE ROUTE : Le catalogue public pour les donateurs
+    {
+      path: '/projets',
+      name: 'projets',
+      component: HomeView, // Remplace 'HomeView' par ton vrai composant de catalogue (ex: ProjectsView)
+    },
     {
       path: '/project/:id',
       name: 'project-detail',
@@ -40,8 +49,9 @@ const router = createRouter({
       name: 'admin-users',
       component: AdminUsersView,
     },
+    // 👇 CORRECTION : Remplacer 'projects' par 'projets'
     {
-      path: '/admin/projects',
+      path: '/admin/projets', 
       name: 'admin-projects',
       component: AdminProjectsView,
     },
