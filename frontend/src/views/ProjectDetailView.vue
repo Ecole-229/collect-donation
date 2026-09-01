@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import imgInondation from '../assets/inondation.jpg'
 import imgForet from '../assets/foret.jpg'
 import imgEducation from '../assets/education.jpg'
+import BoutonAjouterPanier from '../components/panier/BoutonAjouterPanier.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,9 +21,10 @@ const tousLesProjets = [
     categorie: 'Humanitaire',
     image: imgInondation,
     objectif: 15000,
-    recolte: 9450,
+    montantCollecte: 9450,
     porteur: 'ONG Aide Afrique',
-    dateLimite: '31 Décembre 2026'
+    dateLimite: '31 Décembre 2026',
+    statut: 'EN_COURS',
   },
   {
     id: 2,
@@ -31,9 +33,10 @@ const tousLesProjets = [
     categorie: 'Environnement',
     image: imgForet,
     objectif: 5000,
-    recolte: 1200,
+    montantCollecte: 1200,
     porteur: 'Collectif Éco-Bénin',
-    dateLimite: '15 Novembre 2026'
+    dateLimite: '15 Novembre 2026',
+    statut: 'EN_COURS',
   },
   {
     id: 3,
@@ -42,9 +45,10 @@ const tousLesProjets = [
     categorie: 'Éducation',
     image: imgEducation,
     objectif: 8000,
-    recolte: 8000,
+    montantCollecte: 8000,
     porteur: 'EduTech For All',
-    dateLimite: '30 Octobre 2026'
+    dateLimite: '30 Octobre 2026',
+    statut: 'TERMINE',
   }
 ]
 
@@ -61,8 +65,8 @@ onMounted(() => {
   }
 })
 
-const calculerPourcentage = (recolte, objectif) => {
-  const pct = Math.round((recolte / objectif) * 100)
+const calculerPourcentage = (montantCollecte, objectif) => {
+  const pct = Math.round((montantCollecte / objectif) * 100)
   return pct > 100 ? 100 : pct
 }
 </script>
@@ -91,11 +95,11 @@ const calculerPourcentage = (recolte, objectif) => {
           <div class="progress-bar-bg">
             <div
               class="progress-bar-fill"
-              :style="{ width: calculerPourcentage(projet.recolte, projet.objectif) + '%' }"
+              :style="{ width: calculerPourcentage(projet.montantCollecte, projet.objectif) + '%' }"
             ></div>
           </div>
           <div class="progress-metrics">
-            <span class="percentage">{{ calculerPourcentage(projet.recolte, projet.objectif) }}%</span>
+            <span class="percentage">{{ calculerPourcentage(projet.montantCollecte, projet.objectif) }}%</span>
             <span class="dates">Fin le : {{ projet.dateLimite }}</span>
           </div>
         </div>
@@ -103,7 +107,7 @@ const calculerPourcentage = (recolte, objectif) => {
         <div class="financial-summary">
           <div class="metric">
             <span class="label">Récolté</span>
-            <span class="value color-primary">{{ projet.recolte }} €</span>
+            <span class="value color-primary">{{ projet.montantCollecte }} €</span>
           </div>
           <div class="metric">
             <span class="label">Objectif</span>
@@ -112,9 +116,9 @@ const calculerPourcentage = (recolte, objectif) => {
         </div>
 
         <!-- Bouton d'action pour Félix (Panier) -->
-        <button class="btn-action-donate">
-          Ajouter au panier pour soutenir
-        </button>
+         <div class="btn-action-donate-wrapper">
+          <BoutonAjouterPanier :projet="projet" />
+        </div>
       </div>
     </div>
 
@@ -288,21 +292,20 @@ const calculerPourcentage = (recolte, objectif) => {
   color: var(--primary);
 }
 
-.btn-action-donate {
+.btn-action-donate-wrapper {
   width: 100%;
-  padding: 15px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
 }
 
-.btn-action-donate:hover {
-  background: var(--primary-dark);
+.btn-action-donate-wrapper :deep(.ba-wrapper) {
+  display: block;
+  width: 100%;
+}
+
+.btn-action-donate-wrapper :deep(.ba-trigger) {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: var(--radius);
 }
 
 /* Description */

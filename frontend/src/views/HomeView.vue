@@ -1,12 +1,13 @@
+
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import imgInondation from '../assets/inondation.jpg'
 import imgForet from '../assets/foret.jpg'
 import imgEducation from '../assets/education.jpg'
+import BoutonAjouterPanier from '../components/panier/BoutonAjouterPanier.vue'
 
 const router = useRouter()
-// Liste fictive de projets pour simuler la base de données (John James)
 const projets = ref([
   {
     id: 1,
@@ -16,7 +17,8 @@ const projets = ref([
     categorie: 'Humanitaire',
     image: imgInondation,
     objectif: 15000,
-    recolte: 9450,
+    montantCollecte: 9450,
+    statut: 'EN_COURS',
   },
   {
     id: 2,
@@ -26,7 +28,8 @@ const projets = ref([
     categorie: 'Environnement',
     image: imgForet,
     objectif: 5000,
-    recolte: 1200,
+    montantCollecte: 1200,
+    statut: 'EN_COURS',
   },
   {
     id: 3,
@@ -36,7 +39,8 @@ const projets = ref([
     categorie: 'Éducation',
     image: imgEducation,
     objectif: 8000,
-    recolte: 8000,
+    montantCollecte: 8000,
+    statut: 'TERMINE',
   },
 ])
 
@@ -60,8 +64,8 @@ const projetsFiltres = computed(() => {
 
 
 // Calcul du pourcentage de la barre de progression
-const calculerPourcentage = (recolte, objectif) => {
-  const pct = Math.round((recolte / objectif) * 100)
+const calculerPourcentage = (montantCollecte, objectif) => {
+  const pct = Math.round((montantCollecte / objectif) * 100)
   return pct > 100 ? 100 : pct
 }
 
@@ -113,18 +117,21 @@ const deconnexion = () => {
           <div class="progress-section">
             <div class="progress-bar-bg">
               <div class="progress-bar-fill"
-                :style="{ width: calculerPourcentage(projet.recolte, projet.objectif) + '%' }"></div>
+                :style="{ width: calculerPourcentage(projet.montantCollecte, projet.objectif) + '%' }"></div>
             </div>
             <div class="progress-text">
-              <span class="pct-number">{{ calculerPourcentage(projet.recolte, projet.objectif) }}%</span>
-              <span class="amounts">{{ projet.recolte }} € sur {{ projet.objectif }} €</span>
+              <span class="pct-number">{{ calculerPourcentage(projet.montantCollecte, projet.objectif) }}%</span>
+              <span class="amounts">{{ projet.montantCollecte }} € sur {{ projet.objectif }} €</span>
             </div>
           </div>
 
-          <!-- Bouton d'action -->
-          <button @click="router.push(`/project/${projet.id}`)" class="btn-donate">
-            Soutenir ce projet
-          </button>
+          <!-- Actions : voir le détail (John) + ajouter au panier (Félix) -->
+          <div class="card-actions">
+            <button @click="router.push(`/project/${projet.id}`)" class="btn-donate">
+              Voir le projet
+            </button>
+            <BoutonAjouterPanier :projet="projet" />
+          </div>
         </div>
       </div>
     </main>
@@ -315,6 +322,26 @@ const deconnexion = () => {
   color: var(--muted);
 }
 
+.card-actions {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.card-actions .btn-donate {
+  flex: 1;
+  width: auto;
+}
+
+.card-actions :deep(.ba-wrapper) {
+  flex: 1;
+  display: flex;
+}
+
+.card-actions :deep(.ba-trigger) {
+  width: 100%;
+}
+
 .btn-donate {
   width: 100%;
   padding: 12px;
@@ -371,6 +398,4 @@ const deconnexion = () => {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(66, 184, 131, 0.15);
 }
-
-
 </style>
