@@ -3,6 +3,7 @@ const cors = require("cors");
 const user = require("./routes/user.routes.js");
 const project = require("./routes/project.routes.js");
 const donation = require("./routes/don.routes.js");
+const cart = require("./routes/panier.routes.js");
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", user);
 app.use("/api/project", project);
 app.use("/api/donation", donation);
+app.use("/api/cart", cart);
 
 module.exports = app;
