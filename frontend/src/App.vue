@@ -1,21 +1,26 @@
 <script setup>
-import AppHeader from './components/AppHeader.vue' // Ton nouveau composant
+import AppHeader from './components/AppHeader.vue'
+import { RouterView } from 'vue-router'
+import NotificationToast from './components/panier/NotificationToast.vue'
 </script>
 
 <template>
   <div id="app">
     <!-- Le header gère lui-même son affichage s'il y a un utilisateur connecté -->
     <AppHeader />
-    
+
     <!-- C'est ici que Vue Router affiche tes différentes pages (Login, Projets, etc.) -->
     <main>
-      <router-view></router-view>
+      <RouterView />
     </main>
+
+    <!-- Composant de notification pour le panier de Félix -->
+    <NotificationToast />
   </div>
 </template>
 
 <style>
-/* Un reset global basique (si tu n'en as pas déjà un) */
+/* Un reset global basique */
 body {
   margin: 0;
   padding: 0;

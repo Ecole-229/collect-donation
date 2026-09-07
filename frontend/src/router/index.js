@@ -9,7 +9,8 @@ import AdminProjectsView from '../views/AdminProjectsView.vue'
 import AdminCategoriesView from '../views/AdminCategoriesView.vue'
 
 // N'oublie pas d'importer le fichier de ta vue publique des projets !
-// import ProjectsView from '../views/ProjectsView.vue' 
+// import ProjectsView from '../views/ProjectsView.vue'
+import panierRoutes from './panier.routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,7 +53,7 @@ const router = createRouter({
     },
     // 👇 CORRECTION : Remplacer 'projects' par 'projets'
     {
-      path: '/admin/projets', 
+      path: '/admin/projets',
       name: 'admin-projects',
       component: AdminProjectsView,
     },
@@ -61,6 +62,8 @@ const router = createRouter({
       name: 'admin-categories',
       component: AdminCategoriesView,
     },
+    ...panierRoutes
+
   ],
 })
 
