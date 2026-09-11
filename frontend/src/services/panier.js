@@ -28,6 +28,16 @@ export default {
         return response.json();
     },
 
+    async updateCartItem(projectId, amount) {
+        const response = await fetch(`${API_URL}/update`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify({ projectId, amount })
+        });
+        if (!response.ok) throw new Error('Erreur lors de la mise à jour du panier');
+        return response.json();
+    },
+
     async removeFromCart(projectId) {
         const response = await fetch(`${API_URL}/item/${projectId}`, {
             method: 'DELETE',
