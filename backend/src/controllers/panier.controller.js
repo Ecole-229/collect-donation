@@ -94,3 +94,23 @@ exports.checkoutCart = async (req, res) => {
         res.status(500).json({ message: 'Erreur lors de la validation du panier.' });
     }
 };
+
+exports.updateCartItem = async (req, res) => {
+    try {
+        const { projectId, amount } = req.body;
+        const cart = await Cart.findOne({ user: req.user.id });
+
+        if (!cart) return res.status(404).json({ message: 'Panier introuvable.' });
+
+        const itemIndex = cart.items.findIndex(item => item.project.toString() === projectId);
+
+        if (itemIndex > -1) {
+            cart.items[itemIndex].amount = Number(amount);
+        }
+
+        await cart.save();
+        res.status(200).json(cart);
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la mise à jour du panier." });
+    }
+};
