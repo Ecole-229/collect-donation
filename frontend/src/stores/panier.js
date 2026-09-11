@@ -1,12 +1,4 @@
-/**
- * store panier (Pinia)
- * ---------------------------------------------------------------
- * Source de vérité côté frontend pour le Panier et ses LignePanier.
- * Toute mutation passe par le backend (Eddy) via panierService, puis
- * remplace l'état local par la réponse serveur : le total et le
- * statut affichés sont donc toujours ceux calculés côté serveur
- * (Panier.calculerTotal()), jamais recalculés en local.
- */
+
 import { defineStore } from 'pinia'
 import { panierService } from '@/services/panierService'
 import { validerMontant } from '@/composables/useMontantValidation'
@@ -16,7 +8,7 @@ export const usePanierStore = defineStore('panier', {
   state: () => ({
     panier: null, // { id, total, statut, lignes: [...] }
     chargement: false,
-    ligneEnAttente: null, // id de la ligne en cours de modif/suppression
+    ligneEnAttente: null, // id (= id du projet) de la ligne en cours de modif/suppression
     erreur: null,
   }),
 
@@ -63,18 +55,18 @@ export const usePanierStore = defineStore('panier', {
       }
     },
 
-    /** Modifie le montant d'une ligne existante. */
-    async modifierMontantLigne(ligneId, nouveauMontant) {
-      const ligne = this.lignes.find((l) => l.id === ligneId)
+    /** Modifie le montant d'une ligne existante (identifiée par l'id du projet). */
+    async modifierMontantLigne(projetId, nouveauMontant) {
+      const ligne = this.lignes.find((l) => l.id === projetId)
       const { valide, erreur, montant } = validerMontant(nouveauMontant, ligne?.projet)
       if (!valide) {
         useNotification().notifierErreur(erreur)
         return { succes: false, erreur }
       }
 
-      this.ligneEnAttente = ligneId
+      this.ligneEnAttente = projetId
       try {
-        this.panier = await panierService.modifierMontant(ligneId, montant)
+        this.panier = await panierService.modifierMontant(projetId, montant)
         return { succes: true }
       } catch (err) {
         this._gererErreur(err, 'Impossible de modifier ce montant.')
@@ -84,10 +76,10 @@ export const usePanierStore = defineStore('panier', {
       }
     },
 
-    async supprimerLigne(ligneId) {
-      this.ligneEnAttente = ligneId
+    async supprimerLigne(projetId) {
+      this.ligneEnAttente = projetId
       try {
-        this.panier = await panierService.supprimerLigne(ligneId)
+        this.panier = await panierService.supprimerLigne(projetId)
         useNotification().notifierSucces('Ligne supprimée du panier.')
       } catch (err) {
         this._gererErreur(err, 'Impossible de supprimer cette ligne.')
@@ -116,8 +108,10 @@ export const usePanierStore = defineStore('panier', {
       this.chargement = true
       try {
         const resultat = await panierService.validerPanier()
-        this.panier = resultat.panier ?? resultat
-        useNotification().notifierSucces('Don validé, merci pour votre contribution !')
+        this.panier = { id: this.panier?.id ?? null, total: 0, statut: 'VIDE', lignes: [] }
+        useNotification().notifierSucces(
+          resultat?.message ?? 'Don validé, merci pour votre contribution !'
+        )
         return { succes: true, resultat }
       } catch (err) {
         this._gererErreur(err, 'La validation du panier a échoué. Réessayez.')
