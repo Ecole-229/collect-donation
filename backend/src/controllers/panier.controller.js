@@ -114,3 +114,18 @@ exports.updateCartItem = async (req, res) => {
         res.status(500).json({ message: "Erreur lors de la mise à jour du panier." });
     }
 };
+
+
+
+exports.clearCart = async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ user: req.user.id });
+        if (!cart) return res.status(404).json({ message: 'Panier introuvable.' });
+
+        cart.items = [];
+        await cart.save();
+        res.status(200).json({ message: 'Panier vidé.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la suppression du panier.' });
+    }
+};

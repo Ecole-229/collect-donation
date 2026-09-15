@@ -9,5 +9,6 @@ router.post("/create", verifyToken, isAdmin, projectController.createProject);
 router.get("/:id", projectController.getOneProject);
 router.get("/", projectController.getAllProjects);
 router.put("/update/:id", verifyToken, isAdmin, projectController.UpdateProjectStatus);
+router.put("/:id/cancel", verifyToken, isAdmin, projectController.cancelProject);
 
 module.exports = router;
