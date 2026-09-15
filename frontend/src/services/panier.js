@@ -47,6 +47,15 @@ export default {
         return response.json();
     },
 
+    async removeAllFromCart() {
+        const response = await fetch(`${API_URL}/clear`, {
+            method: 'DELETE',
+            headers: getHeaders()
+        });
+        if (!response.ok) throw new Error('Erreur lors de la suppression du panier');
+        return response.json();
+    },
+
     async checkout() {
         const response = await fetch(`${API_URL}/checkout`, {
             method: 'POST',
