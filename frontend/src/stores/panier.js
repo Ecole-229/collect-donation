@@ -8,7 +8,7 @@
  * (Panier.calculerTotal()), jamais recalculés en local.
  */
 import { defineStore } from 'pinia'
-import { panierService } from '../services/panierService'
+import panierService from '../services/panierServices.js'
 import { validerMontant } from '../composables/useMontantValidation'
 import { useNotification } from '../composables/useNotification'
 
