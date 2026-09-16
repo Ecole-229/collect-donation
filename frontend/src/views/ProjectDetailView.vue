@@ -6,7 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import imgInondation from '../assets/inondation.jpg'
 import imgForet from '../assets/foret.jpg'
 import imgEducation from '../assets/education.jpg'
-import BoutonAjouterPanier from '../components/panier/BoutonAjouterPanier.vue'
+import BoutonAjouterPanier from '../components/panier/BoutonAjouter.vue'
 
 const route = useRoute()
 const router = useRouter()

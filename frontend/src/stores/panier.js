@@ -8,9 +8,9 @@
  * (Panier.calculerTotal()), jamais recalculés en local.
  */
 import { defineStore } from 'pinia'
-import { panierService } from '@/services/panierService'
-import { validerMontant } from '@/composables/useMontantValidation'
-import { useNotification } from '@/composables/useNotification'
+import { panierService } from '../services/panierService'
+import { validerMontant } from '../composables/useMontantValidation'
+import { useNotification } from '../composables/useNotification'
 
 export const usePanierStore = defineStore('panier', {
   state: () => ({
